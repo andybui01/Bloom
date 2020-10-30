@@ -23,19 +23,21 @@
  **/
 
 #include <bloom.hpp>
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * Public
  **/
 
 // Constructor method, use default false-positve rate of 1%
-BloomFilter::BloomFilter(int elements): elements(elements), fp_rate(0.01) {
+BloomFilter::BloomFilter(uint32_t elements): elements(elements), fp_rate(0.01) {
     size = calculateSize(elements, fp_rate);
     num_hash = calculateNumHash(elements, size);
 }
 
 // Constructor method with specified false-positive rate
-BloomFilter::BloomFilter(int elements, double fp_rate): elements(elements), fp_rate(fp_rate) {
+BloomFilter::BloomFilter(uint32_t elements, double fp_rate): elements(elements), fp_rate(fp_rate) {
     size = calculateSize(elements, fp_rate);
     num_hash = calculateNumHash(elements, size);
 }
@@ -52,9 +54,31 @@ int BloomFilter::getNumHash() {
  * Private
  **/
 
-int BloomFilter::calculateSize(int elements, double fp_rate) {
+uint32_t BloomFilter::calculateSize(uint32_t elements, double fp_rate) {
     return -(elements * log(fp_rate)) / pow(log(2), 2);
 }
-double BloomFilter::calculateNumHash(int elements, int size) {
+double BloomFilter::calculateNumHash(uint32_t elements, uint32_t size) {
     return size * log(2) / elements;
+}
+
+// Hash function that implements Dan Bernstein's djb2:
+// http://www.cse.yorku.ca/~oz/hash.html
+uint64_t BloomFilter::hash(char* str, const char* salt) {
+    uint64_t hash = 5381;
+    int c;
+
+    // salt the string
+    char* salted = (char*) malloc(1 + strlen(str) + strlen(salt));
+    strcpy(salted, str);
+    strcat(salted, salt);
+
+    std::cout << salted << std::endl;
+
+    char* temp = salted;
+
+    while ((c = *salted++))
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    free(temp); // does nothing?
+    return hash;
 }

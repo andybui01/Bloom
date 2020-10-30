@@ -33,10 +33,10 @@ class BloomFilter {
 
 private:
     // Number of elements that will be hashed
-    int elements;
+    uint32_t elements;
 
     // Size of bitmap
-    int size;
+    uint32_t size;
 
     // Number of hash functions used
     int num_hash;
@@ -45,7 +45,7 @@ private:
     double fp_rate;
 
     // Salts used for hashing
-    std::string salts[50] = {
+    const char* salts[50] = {
         "FullmetalAlchemist:Brotherhood",
         "Gintama(2015)",
         "HunterxHunter(2011)",
@@ -98,18 +98,17 @@ private:
         "OokamiKodomonoAmetoYuki"
     };
 
-    int calculateSize(int elements, double fp_rate);
-    double calculateNumHash(int elements, int size);
+    uint32_t calculateSize(uint32_t elements, double fp_rate);
+    double calculateNumHash(uint32_t elements, uint32_t size);
+
 
 public:
-    BloomFilter(int elements);
-
-    BloomFilter(int elements, double fp_rate);
-
+    BloomFilter(uint32_t elements);
+    BloomFilter(uint32_t elements, double fp_rate);
     double getSize();
-
     int getNumHash();
 
+    uint64_t hash(char* str, const char* salt);
 };
 
 #endif

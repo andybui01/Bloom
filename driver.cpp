@@ -27,7 +27,15 @@
 
 using namespace std;
 int main() {
-    BloomFilter bf(100);
+    int a = 100;
+
+    char* andy;
+    andy = "andy";
+    const char* salt = "salty";
+
+    BloomFilter bf(a);
+
+    bf.hash(andy, salt);
 
     cout << bf.getSize() << " " << bf.getNumHash() << endl;
 }
