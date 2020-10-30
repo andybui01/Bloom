@@ -22,6 +22,8 @@
  * SOFTWARE.
  **/
 
+#ifndef BLOOM_HPP
+#define BLOOM_HPP
 
 #include <math.h>
 #include <iostream>
@@ -96,18 +98,18 @@ private:
         "OokamiKodomonoAmetoYuki"
     };
 
+    int calculateSize(int elements, double fp_rate);
+    double calculateNumHash(int elements, int size);
+
 public:
-    BloomFilter(int elements): elements(elements), fp_rate(0.01) {
-        size = -(elements * log(fp_rate)) / pow(log(2), 2);
-        num_hash = size * log(2) / elements;
-    }
+    BloomFilter(int elements);
 
-    double getSize() {
-        return size;
-    }
+    BloomFilter(int elements, double fp_rate);
 
-    int getNumHash() {
-        return num_hash;
-    }
+    double getSize();
+
+    int getNumHash();
 
 };
+
+#endif

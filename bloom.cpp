@@ -22,12 +22,39 @@
  * SOFTWARE.
  **/
 
-#include <iostream>
 #include <bloom.hpp>
 
-using namespace std;
-int main() {
-    BloomFilter bf(100);
+/**
+ * Public
+ **/
 
-    cout << bf.getSize() << " " << bf.getNumHash() << endl;
+// Constructor method, use default false-positve rate of 1%
+BloomFilter::BloomFilter(int elements): elements(elements), fp_rate(0.01) {
+    size = calculateSize(elements, fp_rate);
+    num_hash = calculateNumHash(elements, size);
+}
+
+// Constructor method with specified false-positive rate
+BloomFilter::BloomFilter(int elements, double fp_rate): elements(elements), fp_rate(fp_rate) {
+    size = calculateSize(elements, fp_rate);
+    num_hash = calculateNumHash(elements, size);
+}
+
+double BloomFilter::getSize() {
+    return size;
+}
+
+int BloomFilter::getNumHash() {
+    return num_hash;
+}
+
+/**
+ * Private
+ **/
+
+int BloomFilter::calculateSize(int elements, double fp_rate) {
+    return -(elements * log(fp_rate)) / pow(log(2), 2);
+}
+double BloomFilter::calculateNumHash(int elements, int size) {
+    return size * log(2) / elements;
 }
