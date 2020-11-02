@@ -5,11 +5,9 @@ using namespace std;
 int main() {
     int a = 100;
 
-    char* andy;
-    andy = "andy";
-    const char* salt = "salty";
-
     BloomFilter bf(a);
-
-    cout << bf.getSize() << " " << bf.getNumHash() << endl;
+    printf("size: %d num_hash: %d\n", bf.getSize(), bf.getNumHash());
+    printf("found: %d\n", bf.check("andy"));
+    bf.insert("andy");
+    printf("found: %d\n", bf.check("andy"));
 }

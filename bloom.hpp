@@ -12,6 +12,7 @@ class BloomFilter {
 
 private:
     // Number of elements that will be hashed
+    // TODO: remove??
     uint32_t elements;
 
     // Size of bitmap
@@ -24,7 +25,7 @@ private:
     double fp_rate;
 
     // Bitmap
-    uint32_t bit_map;
+    uint32_t* bitmap;
 
     // Salts used for hashing
     const char* salts[50] = {
@@ -83,13 +84,16 @@ private:
     uint32_t calculateSize(uint32_t elements, double fp_rate);
     int calculateNumHash(uint32_t elements, uint32_t size);
     uint64_t hash(char* str, const char* salt);
+    void bitmap_set(uint32_t bit_index);
+    uint32_t bitmap_check(uint32_t bit_index);
 
 
 public:
     BloomFilter(uint32_t elements);
     BloomFilter(uint32_t elements, double fp_rate);
     void insert(char* str);
-    double getSize();
+    int check(char* str);
+    uint32_t getSize();
     int getNumHash();
 
 };

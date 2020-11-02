@@ -10,21 +10,33 @@
 BloomFilter::BloomFilter(uint32_t elements): elements(elements), fp_rate(0.01) {
     size = calculateSize(elements, fp_rate);
     num_hash = calculateNumHash(elements, size);
+    bitmap = (uint32_t *) calloc(size / 32, 4);
 }
 
 // Constructor method with specified false-positive rate
 BloomFilter::BloomFilter(uint32_t elements, double fp_rate): elements(elements), fp_rate(fp_rate) {
     size = calculateSize(elements, fp_rate);
     num_hash = calculateNumHash(elements, size);
+    bitmap = (uint32_t *) calloc(size / 32, 4);
 }
 
-// void BloomFilter::insert(char* str) {
-//     for (int i = 0; i < num_hash; ++i) {
-//         uint64_t bit_index = hash(str, salts[i]) % (size * 32);
-//     }
-// }
+void BloomFilter::insert(char* str) {
+    for (int i = 0; i < num_hash; ++i) {
+        uint32_t bit_index = hash(str, salts[i]) % size;
+        bitmap_set(bit_index);
+    }
+}
 
-double BloomFilter::getSize() {
+int BloomFilter::check(char* str) {
+    for (int i = 0; i < num_hash; ++i) {
+        uint32_t bit_index = hash(str, salts[i]) % size;
+        if (!(bitmap_check(bit_index)))
+            return 0;
+    }
+    return 1;
+}
+
+uint32_t BloomFilter::getSize() {
     return size;
 }
 
@@ -55,8 +67,6 @@ uint64_t BloomFilter::hash(char* str, const char* salt) {
     strcpy(salted, str);
     strcat(salted, salt);
 
-    std::cout << salted << std::endl;
-
     char* temp = salted;
 
     while ((c = *salted++))
@@ -64,4 +74,16 @@ uint64_t BloomFilter::hash(char* str, const char* salt) {
 
     free(temp); // does nothing?
     return hash;
+}
+
+void BloomFilter::bitmap_set(uint32_t bit_index) {
+    uint32_t index = bit_index / 32;
+    int offset = bit_index % 32;
+    bitmap[index] |= (1 << offset);
+}
+
+uint32_t BloomFilter::bitmap_check(uint32_t bit_index) {
+    uint32_t index = bit_index / 32;
+    int offset = bit_index % 32;
+    return (bitmap[index] & (1 << offset));
 }
