@@ -54,17 +54,17 @@ uint64_t BloomFilter::hash(const char* str, const char* salt) {
     uint64_t hash = 5381;
     int c;
 
+    const char* salted = str;
     // salt the string
-    char* salted = (char*) malloc(1 + strlen(str) + strlen(salt));
-    strcpy(salted, str);
-    strcat(salted, salt);
+    // char* salted = (char*) malloc(1 + strlen(str) + strlen(salt));
+    // strcpy(salted, str);
+    // strcat(salted, salt);
 
-    char* temp = salted;
+    // char* temp = salted;
 
     while ((c = *salted++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
-    free(temp); // does nothing?
     return hash;
 }
 
