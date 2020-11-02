@@ -1,13 +1,17 @@
 #include <iostream>
 #include <bloom.hpp>
+#include <chrono>
 
 using namespace std;
 int main() {
     int a = 100;
 
     BloomFilter bf(a);
-    printf("size: %d num_hash: %d\n", bf.getSize(), bf.getNumHash());
-    printf("found: %d\n", bf.check("andy"));
+    auto t1 = std::chrono::high_resolution_clock::now();
     bf.insert("andy");
-    printf("found: %d\n", bf.check("andy"));
+    bf.check("andy");
+    auto t2 = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+    std::cout << duration;
 }
