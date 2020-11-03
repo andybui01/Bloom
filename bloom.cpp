@@ -1,6 +1,7 @@
 #include <bloom.hpp>
 #include <stdlib.h>
 #include <string.h>
+#include <MurmurHash2.h>
 
 /**
  * Public
@@ -22,14 +23,14 @@ BloomFilter::BloomFilter(uint32_t elements, double fp_rate): fp_rate(fp_rate) {
 
 void BloomFilter::insert(const char* str) {
     for (int i = 0; i < num_hash; ++i) {
-        uint32_t bit_index = hash(str, salts[i]) % size;
+        uint32_t bit_index = MurmurHash2(str, strlen(str), i) % size;
         bitmap_set(bit_index);
     }
 }
 
 int BloomFilter::check(const char* str) {
     for (int i = 0; i < num_hash; ++i) {
-        uint32_t bit_index = hash(str, salts[i]) % size;
+        uint32_t bit_index = MurmurHash2(str, strlen(str), i) % size;
         if (!(bitmap_check(bit_index)))
             return 0;
     }
@@ -48,29 +49,10 @@ int BloomFilter::calculateNumHash(uint32_t elements, uint32_t size) {
     return CEILING(size * log(2), elements);
 }
 
-// Hash function that implements Dan Bernstein's djb2:
-// http://www.cse.yorku.ca/~oz/hash.html
-uint64_t BloomFilter::hash(const char* str, const char* salt) {
-    uint64_t hash = 5381;
-    int c;
-
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    while ((c = *salt++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    return hash;
-}
-
 inline void BloomFilter::bitmap_set(uint32_t bit_index) {
-    uint32_t index = bit_index / 32;
-    int offset = bit_index % 32;
-    bitmap[index] |= (1 << offset);
+    bitmap[bit_index >> 5] |= (1 << (bit_index & 31));
 }
 
 inline uint32_t BloomFilter::bitmap_check(uint32_t bit_index) {
-    uint32_t index = bit_index / 32;
-    int offset = bit_index % 32;
-    return (bitmap[index] & (1 << offset));
+    return (bitmap[bit_index >> 5] & (1 << (bit_index & 31)));
 }
