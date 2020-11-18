@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -I. -pthread
+CXXFLAGS = -Wall -Wextra -Iinclude -pthread
 TARGET = main
 TEST_TARGET = runtest
 
@@ -11,16 +11,16 @@ bloom: driver.o bloom.o murmur.o
 driver.o: driver.cpp
 	$(CXX) $(CXXFLAGS) -c driver.cpp
 
-bloom.o: bloom.cpp bloom.hpp
+bloom.o: bloom.cpp include/bloom.hpp
 	$(CXX) $(CXXFLAGS) -c bloom.cpp
 
-murmur.o: MurmurHash2.cpp MurmurHash2.h
+murmur.o: MurmurHash2.cpp include/MurmurHash2.h
 	$(CXX) $(CXXFLAGS) -o murmur.o -c MurmurHash2.cpp
 
 test: bloom.o test.o murmur.o
 	$(CXX) $(CXXFLAGS) -o $(TEST_TARGET) test/test.o bloom.o murmur.o
 
-test.o: test/test.cpp
+test.o: test/test.cpp $(wildcard test/*.hpp)
 	$(CXX) $(CXXFLAGS) -c -o test/test.o test/test.cpp
 
 list:

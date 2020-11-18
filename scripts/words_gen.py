@@ -8,6 +8,6 @@ f = open("scripts/words.txt", "r")
 words = f.readlines()
 
 for i in range(N):
-    print(words[random.randint(0, 10000 - 1)])
+    print(words[random.randint(0, 10000 - 1)].rstrip())
 
 f.close()
