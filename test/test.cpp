@@ -8,6 +8,7 @@
 #include "Tester.hpp"
 #include "BloomTester.hpp"
 #include "StdUnorderedSetTester.hpp"
+#include "DenseHashTester.hpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -22,7 +23,6 @@ struct HashTableTester {
 };
 
 
-
 int main() {
 
     // read words into vectors
@@ -31,7 +31,8 @@ int main() {
 
     HashTableTester hash_tables[] = {
         {"Bloom filter", create_BloomTester(100000)},
-        {"std unordered set", create_StdUnorderedSetTester()}
+        {"std unordered set", create_StdUnorderedSetTester()},
+        {"google dense hash set", create_DenseHashTester()}
     };
 
     int num = sizeof(hash_tables)/sizeof(struct HashTableTester);
