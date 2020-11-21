@@ -6,24 +6,23 @@
 #include <bloom/bloom.h>
 
 #include "Tester.hpp"
+#include "test.hpp"
 
 class BloomTester : public Tester {
 private:
-    BloomFilter bf;
+    BloomFilter set;
 public:
-    BloomTester(uint32_t elements): bf(elements){
+    BloomTester(uint32_t elements): set(elements){
     }
 
     void insert_words(std::vector<std::string> insert_vec) {
         for (std::string &it: insert_vec) {
-            // cout << it;
-            bf.insert(it.c_str());
+            set.insert(it.c_str());
         }
     }
     void check_words(std::vector<std::string> check_vec) {
         for (std::string &it: check_vec) {
-            // cout << it;
-            bf.check(it.c_str());
+            set.find(it.c_str());
         }
     }
 };

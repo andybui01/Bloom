@@ -1,5 +1,5 @@
-#ifndef BLOOM_HPP
-#define BLOOM_HPP
+#ifndef BLOOM_H
+#define BLOOM_H
 
 #define ROUND_UP(x, y) ((((x) + (y) - 1) / (y)) * (y))
 #define CEILING(x, y) (((x) + (y) - 1) / (y))
@@ -65,9 +65,7 @@ public:
     // Constructor method, use default false-positve rate of 1%
     BloomFilter(uint32_t elements): fp_rate(0.01) {
         size = calculateSize(elements, fp_rate);
-        std::cout << size << std::endl;
         num_hash = calculateNumHash(elements, size);
-        std::cout << num_hash << std::endl;
         bitmap = (uint32_t *) calloc(size / 32, 4);
     }
 
@@ -85,7 +83,7 @@ public:
         }
     }
 
-    int check(const char* str) {
+    int find(const char* str) {
         for (int i = 0; i < num_hash; ++i) {
             uint32_t bit_index = MurmurHash2(str, strlen(str), i) % size;
             if (!(bitmap_check(bit_index)))
