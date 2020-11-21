@@ -9,6 +9,8 @@
 #include "BloomTester.hpp"
 #include "StdUnorderedSetTester.hpp"
 #include "DenseHashTester.hpp"
+#include "SparseHashTester.hpp"
+#include "RobinSetTester.hpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -32,7 +34,9 @@ int main() {
     HashTableTester hash_tables[] = {
         {"Bloom filter", create_BloomTester(100000)},
         {"std unordered set", create_StdUnorderedSetTester()},
-        {"google dense hash set", create_DenseHashTester()}
+        {"google dense hash set", create_DenseHashTester()},
+        {"google sparse hash set", create_SparseHashTester()},
+        {"TSL robin set", create_RobinSetTester()}
     };
 
     int num = sizeof(hash_tables)/sizeof(struct HashTableTester);

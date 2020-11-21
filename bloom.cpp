@@ -10,7 +10,9 @@
 // Constructor method, use default false-positve rate of 1%
 BloomFilter::BloomFilter(uint32_t elements): fp_rate(0.01) {
     size = calculateSize(elements, fp_rate);
+    std::cout << size << std::endl;
     num_hash = calculateNumHash(elements, size);
+    std::cout << num_hash << std::endl;
     bitmap = (uint32_t *) calloc(size / 32, 4);
 }
 
@@ -42,7 +44,21 @@ int BloomFilter::check(const char* str) {
  **/
 
 uint32_t BloomFilter::calculateSize(uint32_t elements, double fp_rate) {
-    return ROUND_UP(-(elements * log(fp_rate)) / pow(log(2), 2), 32);
+
+    uint32_t size = -(elements * log(fp_rate)) / pow(log(2), 2);
+
+    // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+    // Alternate: round to nearest power of 2 and use bit-AND with size - 1 
+    // to get modulus
+    // size--;
+    // size |= size >> 1;
+    // size |= size >> 2;
+    // size |= size >> 4;
+    // size |= size >> 8;
+    // size |= size >> 16;
+    // size++;
+
+    return ROUND_UP(size, 32);
 }
 
 int BloomFilter::calculateNumHash(uint32_t elements, uint32_t size) {

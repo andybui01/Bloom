@@ -1,13 +1,13 @@
-#ifndef TEST_DENSEHASHTESTER_HPP
-#define TEST_DENSEHASHTESTER_HPP
+#ifndef TEST_SPARSEHASHTESTER_HPP
+#define TEST_SPARSEHASHTESTER_HPP
 
 #include <vector>
 #include <string>
-#include <sparsehash/dense_hash_set>
+#include <sparsehash/sparse_hash_set>
 #include <functional>
 
 #include "Tester.hpp"
-using google::dense_hash_set;
+using google::sparse_hash_set;
 
 #ifndef EQSTR
 #define EQSTR
@@ -20,14 +20,10 @@ struct eqstr
 };
 #endif
 
-class DenseHashTester: public Tester {
+class SparseHashTester: public Tester {
 private:
-    dense_hash_set<const char*, std::hash<const char*>, eqstr> set;
+    sparse_hash_set<const char*, std::hash<const char*>, eqstr> set;
 public:
-    DenseHashTester() {
-        set.set_empty_key(NULL);
-    }
-
     void insert_words(std::vector<std::string> insert_vec) {
         for (std::string &it: insert_vec) {
             // cout << it;
@@ -42,8 +38,8 @@ public:
     }
 };
 
-Tester *create_DenseHashTester() {
-    return new DenseHashTester;
+Tester *create_SparseHashTester() {
+    return new SparseHashTester;
 }
 
 #endif

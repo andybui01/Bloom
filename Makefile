@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -Iinclude -pthread
+CXXFLAGS = -Wall -Wextra -Iinclude -std=c++11
 TARGET = main
 TEST_TARGET = runtest
 
