@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include <bloom.hpp>
+#include <bloom/bloom.h>
 
 #include "Tester.hpp"
 
