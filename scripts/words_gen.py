@@ -1,13 +1,12 @@
 import random
+import sys
 
 # usage: python3 words_gen.py > list.txt
 
-N = 100000 # how many words should be in the resulting list
+N = int(sys.argv[1]) # how many words should be in the resulting list
 
-f = open("scripts/words.txt", "r")
-words = f.readlines()
+with open("scripts/words.txt", "r") as f:
+    words = f.readlines()
 
-for i in range(N):
-    print(words[random.randint(0, 10000 - 1)].rstrip())
-
-f.close()
+    for i in range(N):
+        print(words[random.randint(0, 466550 - 1)].rstrip())

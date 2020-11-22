@@ -38,16 +38,18 @@ long get_mem_usage() {
     return data->ru_maxrss;
 }
 
-int main() {
-    
+int main(int argc, char **argv) {
+
     setlocale(LC_ALL, "");
 
     // read words into vectors
     vector<string> insert_vec = read_insert_list();
     vector<string> check_vec = read_check_list();
 
+    int num_elements = stoi(argv[1]);
+
     HashTableTester hash_tables[] = {
-        {"Bloom filter", create_BloomTester(100000)},
+        {"Bloom filter", create_BloomTester(num_elements)},
         {"std unordered set", create_StdUnorderedSetTester()},
         {"google dense hash set", create_DenseHashTester()},
         {"google sparse hash set", create_SparseHashTester()},
@@ -72,23 +74,24 @@ int main() {
 
         auto t2 = high_resolution_clock::now();
 
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-
         auto m2 = get_mem_usage();
         auto mem = m2 - m1;
 
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+
+
         printf("insert time: %lld\n", duration);
-        printf("mem: %'ld\n", mem);
         // sleep(10);
 
 
         t1 = high_resolution_clock::now();
-        table.tester->insert_words(check_vec);
+        table.tester->check_words(check_vec);
 
         t2 = high_resolution_clock::now();
         duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
-        // printf("find time: %lld\n", duration);
+        printf("find time: %lld\n", duration);
+        // printf("mem: %'ld\n", mem);
 
     }
 
@@ -101,7 +104,7 @@ vector<string> read_insert_list() {
 
     string line;
     ifstream file("test/list.txt");
-    
+
     while(getline(file, line)) {
         insert_vec.push_back(line);
     }
@@ -115,7 +118,7 @@ vector<string> read_check_list() {
 
     string line;
     ifstream file2("test/check_list.txt");
-    
+
     while(getline(file2, line)) {
         check_vec.push_back(line);
     }
