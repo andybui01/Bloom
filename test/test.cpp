@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 // random
-#include <locale.h>
+// #include <locale.h>
 
 // testers
 #include "test.hpp"
@@ -40,7 +40,7 @@ long get_mem_usage() {
 
 int main(int argc, char **argv) {
 
-    setlocale(LC_ALL, "");
+    (void) argc;
 
     // read words into vectors
     vector<string> insert_vec = read_insert_list();
@@ -58,29 +58,27 @@ int main(int argc, char **argv) {
 
     int num = sizeof(hash_tables)/sizeof(struct HashTableTester);
 
-    printf("Starting...\n");
-    printf("basemem: %'ld\n", get_mem_usage());
+    printf("%-10d", num_elements);
 
     for (int i = 0; i < num; ++i) {
         HashTableTester table = hash_tables[i];
 
-        cout << "=============================" << endl;
-        cout << table.name << endl;
+        // cout << table.name << endl;
 
         auto m1 = get_mem_usage();
         auto t1 = high_resolution_clock::now();
 
         table.tester->insert_words(insert_vec);
 
+        auto m2 = get_mem_usage();
         auto t2 = high_resolution_clock::now();
 
-        auto m2 = get_mem_usage();
         auto mem = m2 - m1;
 
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
 
-        printf("insert time: %lld\n", duration);
+        printf("%-5lld", duration/1000);
         // sleep(10);
 
 
@@ -90,10 +88,12 @@ int main(int argc, char **argv) {
         t2 = high_resolution_clock::now();
         duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
-        printf("find time: %lld\n", duration);
-        // printf("mem: %'ld\n", mem);
+        // printf("find time: %lld\n", duration);
+        // printf("mem: %ld\n", mem);
 
     }
+
+    printf("\n");
 
     return 0;
 }

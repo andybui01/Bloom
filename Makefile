@@ -1,9 +1,9 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -Iinclude -std=c++11 -O3
+CXXFLAGS = -Wall -Wextra -Iinclude -std=c++11 -O1
 TARGET = main
 TEST_TARGET = runtest
 
-LIST_LENGTH = 100000
+LIST_LENGTH = 200000
 
 .PHONY: test list clean run
 
@@ -23,5 +23,4 @@ run:
 clean:
 	rm -f $(TARGET)
 	rm -f $(TEST_TARGET)
-	rm *.o
 	rm **/*.o

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+size="250000 \
+500000"
+# 750000 \
+# 1000000 \
+# 1250000 \
+# 1500000 \
+# 1750000 \
+# 2000000 \
+# 2250000 \
+# 2500000"
+echo "#y bloom unordered_set dense_hash_set sparse_hash_set tsl_robin_set" > results.dat
+
+# run each test 5 times then average
+for i in 1 2 3 4 5; do
+
+    for num in $size; do
+
+        # make new list
+        python3 scripts/words_gen.py $size > test/list.txt
+        python3 scripts/words_gen.py $size > test/check_list.txt
+
+        # run test
+        ./runtest $num >> results.dat
+
+    done
+
+done

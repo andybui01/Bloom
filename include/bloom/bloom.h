@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <functional>
 
 #define XXH_INLINE_ALL
 #include <bloom/xxhash.h>
@@ -65,15 +66,11 @@ private:
 
 
 public:
-
     // Constructor method, use default false-positve rate of 1%
     BloomFilter(uint32_t elements): fp_rate(0.01) {
         size = calculateSize(elements, fp_rate);
         num_hash = calculateNumHash(elements, size);
         bitmap = (uint32_t *) calloc(size / 32, 4);
-
-        std::cout << size << std::endl;
-        std::cout << num_hash << std::endl;
     }
 
     // Constructor method with specified false-positive rate
