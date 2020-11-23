@@ -82,11 +82,11 @@ int main(int argc, char **argv) {
         // sleep(10);
 
 
-        t1 = high_resolution_clock::now();
-        table.tester->check_words(check_vec);
+        // t1 = high_resolution_clock::now();
+        // table.tester->check_words(check_vec);
 
-        t2 = high_resolution_clock::now();
-        duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+        // t2 = high_resolution_clock::now();
+        // duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
         // printf("find time: %lld\n", duration);
         // printf("mem: %ld\n", mem);

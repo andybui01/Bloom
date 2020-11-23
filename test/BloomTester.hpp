@@ -8,21 +8,23 @@
 #include "Tester.hpp"
 #include "test.hpp"
 
+using namespace bloom;
+
 class BloomTester : public Tester {
 private:
-    BloomFilter set;
+    bloom_filter set;
 public:
     BloomTester(uint32_t elements): set(elements){
     }
 
     void insert_words(std::vector<std::string> insert_vec) {
         for (std::string &it: insert_vec) {
-            set.insert(it.c_str());
+            set.insert(it);
         }
     }
     void check_words(std::vector<std::string> check_vec) {
         for (std::string &it: check_vec) {
-            set.find(it.c_str());
+            set.find(it);
         }
     }
 };

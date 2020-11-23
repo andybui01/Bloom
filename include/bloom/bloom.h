@@ -14,94 +14,97 @@
 #define XXH_INLINE_ALL
 #include <bloom/xxhash.h>
 
-uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed );
+namespace bloom {
 
-class BloomFilter {
+    class bloom_filter {
 
-private:
+    private:
 
-    // Size of bitmap
-    uint32_t size;
+        // Size of bitmap
+        uint32_t size;
 
-    // Number of hash functions used
-    int num_hash;
+        // Number of hash functions used
+        int num_hash;
 
-    // False-positive rate
-    double fp_rate;
+        // False-positive rate
+        double fp_rate;
 
-    // Bitmap
-    uint32_t* bitmap;
+        // Bitmap
+        uint32_t* bitmap;
 
-    uint32_t calculateSize(uint32_t elements, double fp_rate) {
+        uint32_t calculateSize(uint32_t elements, double fp_rate) {
 
-        uint32_t size = -(elements * log(fp_rate)) / pow(log(2), 2);
+            uint32_t size = -(elements * log(fp_rate)) / pow(log(2), 2);
 
-        // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
-        // Alternate: round to nearest power of 2 and use bit-AND with size - 1
-        // to get modulus
-        size--;
-        size |= size >> 1;
-        size |= size >> 2;
-        size |= size >> 4;
-        size |= size >> 8;
-        size |= size >> 16;
-        size++;
-        return size;
+            // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+            // Alternate: round to nearest power of 2 and use bit-AND with size - 1
+            // to get modulus
+            size--;
+            size |= size >> 1;
+            size |= size >> 2;
+            size |= size >> 4;
+            size |= size >> 8;
+            size |= size >> 16;
+            size++;
+            return size;
 
-        // return ROUND_UP(size, 32);
-    }
-
-    int calculateNumHash(uint32_t elements, uint32_t size) {
-        return CEILING(size * log(2), elements);
-    }
-
-    inline void bitmap_set(uint32_t bit_index) {
-        bitmap[bit_index >> 5] |= (1 << (bit_index & 31));
-    }
-
-    inline uint32_t bitmap_check(uint32_t bit_index) {
-        return (bitmap[bit_index >> 5] & (1 << (bit_index & 31)));
-    }
-
-
-
-public:
-    // Constructor method, use default false-positve rate of 1%
-    BloomFilter(uint32_t elements): fp_rate(0.01) {
-        size = calculateSize(elements, fp_rate);
-        num_hash = calculateNumHash(elements, size);
-        bitmap = (uint32_t *) calloc(size / 32, 4);
-    }
-
-    // Constructor method with specified false-positive rate
-    BloomFilter(uint32_t elements, double fp_rate): fp_rate(fp_rate) {
-        size = calculateSize(elements, fp_rate);
-        num_hash = calculateNumHash(elements, size);
-        bitmap = (uint32_t *) calloc(size / 32, 4);
-    }
-
-    void insert(const char* str) {
-
-        size_t len = strlen(str);
-
-        for (int i = 0; i < num_hash; ++i) {
-            uint64_t bit_index = XXH3_64bits(str, len) & (size - 1);
-            bitmap_set(bit_index);
+            // return ROUND_UP(size, 32);
         }
-    }
 
-    int find(const char* str) {
-
-        size_t len = strlen(str);
-
-        for (int i = 0; i < num_hash; ++i) {
-            uint64_t bit_index = XXH3_64bits(str, len) & (size - 1);
-            if (!(bitmap_check(bit_index)))
-                return 0;
+        int calculateNumHash(uint32_t elements, uint32_t size) {
+            return CEILING(size * log(2), elements);
         }
-        return 1;
-    }
 
-};
+        inline void bitmap_set(uint32_t bit_index) {
+            bitmap[bit_index >> 5] |= (1 << (bit_index & 31));
+        }
+
+        inline uint32_t bitmap_check(uint32_t bit_index) {
+            return (bitmap[bit_index >> 5] & (1 << (bit_index & 31)));
+        }
+
+
+
+    public:
+        // Constructor method, use default false-positve rate of 1%
+        bloom_filter(uint32_t elements): fp_rate(0.01) {
+            size = calculateSize(elements, fp_rate);
+            num_hash = calculateNumHash(elements, size);
+            bitmap = (uint32_t *) calloc(size / 32, 4);
+        }
+
+        // Constructor method with specified false-positive rate
+        bloom_filter(uint32_t elements, double fp_rate): fp_rate(fp_rate) {
+            size = calculateSize(elements, fp_rate);
+            num_hash = calculateNumHash(elements, size);
+            bitmap = (uint32_t *) calloc(size / 32, 4);
+        }
+
+        void insert(std::string str) {
+
+            size_t len = str.size();
+            const char* cstr = str.data();
+
+            for (int i = 0; i < num_hash; ++i) {
+                uint64_t bit_index = XXH3_64bits(cstr, len) & (size - 1);
+                bitmap_set(bit_index);
+            }
+        }
+
+        int find(std::string str) {
+
+            size_t len = str.size();
+            const char* cstr = str.data();
+
+            for (int i = 0; i < num_hash; ++i) {
+                uint64_t bit_index = XXH3_64bits(cstr, len) & (size - 1);
+                if (!(bitmap_check(bit_index)))
+                    return 0;
+            }
+            return 1;
+        }
+
+    };
+}
 
 #endif

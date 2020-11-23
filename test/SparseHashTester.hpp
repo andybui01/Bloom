@@ -22,18 +22,16 @@ struct eqstr
 
 class SparseHashTester: public Tester {
 private:
-    sparse_hash_set<const char*, std::hash<const char*>, eqstr> set;
+    sparse_hash_set<std::string, std::hash<std::string>> set;
 public:
     void insert_words(std::vector<std::string> insert_vec) {
         for (std::string &it: insert_vec) {
-            // cout << it;
-            set.insert(it.c_str());
+            set.insert(it);
         }
     }
     void check_words(std::vector<std::string> check_vec) {
         for (std::string &it: check_vec) {
-            // cout << it;
-            set.find(it.c_str());
+            set.find(it);
         }
     }
 };

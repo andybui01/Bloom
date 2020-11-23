@@ -13,31 +13,29 @@ using google::dense_hash_set;
 #define EQSTR
 struct eqstr
 {
-    bool operator()(const char* s1, const char* s2) const
+    bool operator()(std::string s1, std::string s2) const
     {
-        return (s1 == s2) || (s1 && s2 && strcmp(s1, s2) == 0);
+        return (s1 == s2);
     }
 };
 #endif
 
 class DenseHashTester: public Tester {
 private:
-    dense_hash_set<const char*, std::hash<const char*>, eqstr> set;
+    dense_hash_set<std::string, std::hash<std::string>> set;
 public:
     DenseHashTester() {
-        set.set_empty_key(NULL);
+        set.set_empty_key("");
     }
 
     void insert_words(std::vector<std::string> insert_vec) {
         for (std::string &it: insert_vec) {
-            // cout << it;
-            set.insert(it.c_str());
+            set.insert(it);
         }
     }
     void check_words(std::vector<std::string> check_vec) {
         for (std::string &it: check_vec) {
-            // cout << it;
-            set.find(it.c_str());
+            set.find(it);
         }
     }
 };

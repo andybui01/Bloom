@@ -14,12 +14,12 @@ public:
 
     void insert_words(std::vector<std::string> insert_vec) {
         for (std::string &it: insert_vec) {
-            set.insert(it.c_str());
+            set.insert(it);
         }
     }
     void check_words(std::vector<std::string> check_vec) {
         for (std::string &it: check_vec) {
-            set.find(it.c_str());
+            set.find(it);
         }
     }
 };
