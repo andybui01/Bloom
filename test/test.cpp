@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
     int num = sizeof(hash_tables)/sizeof(struct HashTableTester);
 
-    printf("%-10d", num_elements);
+    // printf("%-10d", num_elements);
 
     for (int i = 0; i < num; ++i) {
         HashTableTester table = hash_tables[i];
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
 
-        printf("%-5lld", duration/1000);
+        // printf("%-5lld", duration/1000);
         // sleep(10);
 
 

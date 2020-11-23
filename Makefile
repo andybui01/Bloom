@@ -3,7 +3,7 @@ CXXFLAGS = -Wall -Wextra -Iinclude -std=c++11 -O3
 TARGET = main
 TEST_TARGET = runtest
 
-LIST_LENGTH = 200000
+LIST_LENGTH = 5
 
 .PHONY: test list clean run
 
